@@ -9,19 +9,11 @@ const Op = db.Sequelize.Op; //Operator to be used
 
 // retreive all students from the database
 exports.GetAllStudents = (req, res) => {
-    Students.findAll().then(data => {
-        res.send({
-            status: "Success",
-            status_code: 100,
-            message: "Students retreived",
-            result: data
-        });
+    Students.findAll({ limit: 25 }).then(data => {
+        res.status(200).send({ data });
     }).catch(err => {
-        res.status(500).send({
-            status: "Error",
-            status_code: 101,
-            message: err.message || "Error occured while retrieving students"
-        });
+        console.error("Status 500 message: ", err.message);
+        res.status(500).send({ message: err.message || "Error occured while retrieving students" });
     });
 }
 

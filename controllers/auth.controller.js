@@ -8,7 +8,7 @@ const secretKey = process.env.SECRET_KEY;
 
 // Register route
 exports.Register = (req, res) => {
-    const { username: userName, email, password } = req.body;
+    const { userName, email, password } = req.body;
     let msg = "";
 
     if (!userName){ msg = msg + "Username is required. " }
@@ -21,7 +21,7 @@ exports.Register = (req, res) => {
 
     Users.findAll({
         attributes: ['userName'],
-        where: { username: userName }
+        where: { userName: userName }
     })
     .then( async data => {
         if(data.length > 0){
@@ -40,9 +40,8 @@ exports.Register = (req, res) => {
 
         await Users.create(user)
         .then(
-            res.send({
+            res.status(200).send({
                 status: "Success",
-                status_code: 100,
                 message: `New user ${userName} registered sucessfully. Please proceed to login.`
             })
         )
@@ -50,7 +49,6 @@ exports.Register = (req, res) => {
     .catch(err => {
         res.status(500).send({
             status: "Error",
-            status_code: 1001,
             message: err.message || "Error occurred while registering new user"
         });
     });
@@ -58,7 +56,7 @@ exports.Register = (req, res) => {
 
 // Login route
 exports.Login = (req, res) => {
-    const { username: userName, password } = req.body;
+    const { userName, password } = req.body;
     Users.findOne({
         attributes: ['userName', 'password'],
         where: { userName: userName },
@@ -72,14 +70,25 @@ exports.Login = (req, res) => {
             }
 
             const token = jwt.sign({ id: data.dataValues.userName }, secretKey, { expiresIn: "1h" });
-            res.status(200).send({ token });
+            res.status(201).send({ token });
         }
     })
     .catch(err => {
+        console.error("Status 500 Message:", err.message);
         res.status(500).send({
-            status: "Error",
-            status_code: 101,
             message: err.message || "An error occured while loggin in."
         });
     });
+};
+
+exports.CheckToken = (req, res) => {
+    const checkToken = require("./functions/checkTokenExpiry");
+    const { token } = req.body;
+    const validToken = checkToken(token);
+
+    if(!validToken){
+        res.status(200).send(false);
+    }
+
+    res.status(200).send(validToken);
 };

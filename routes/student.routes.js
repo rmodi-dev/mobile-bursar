@@ -5,7 +5,7 @@ module.exports = app => {
     let router = require("express").Router();
 
     //Students routes
-    router.get("/r", verifyToken, studentController.GetAllStudents);
+    router.get("/list", verifyToken, studentController.GetAllStudents);
     router.put("/update/:id", verifyToken, studentController.UpdateStudent);
     router.get("/find/:id", verifyToken, studentController.GetStudentByID);
     router.post("/findById", verifyToken, studentController.FindStudentById);
