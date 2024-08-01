@@ -2,11 +2,11 @@
     "name": "mobile-bursar",
     "version": "0.0.1",
     "description": "A student fees Management System",
-    "main": "server.js",
+    "main": "mobile-bursar.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "dev": "nodemon server.js",
-        "start": "pm2 start server.js"
+        "dev": "nodemon mobile-bursar.js",
+        "start": "pm2 start mobile-bursar.js"
     },
     "repository": {
         "type": "git",

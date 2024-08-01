@@ -62,11 +62,11 @@ exports.Login = (req, res) => {
         where: { userName: userName },
     })
     .then(data => {
-        if (!data) { return res.status(404).send({ message: 'User not found' }); }
+        if (!data) { return res.status(404).send({ message: 'No such user' }); }
         else{
             const passwordIsValid = bcrypt.compareSync(password, data.dataValues.password);
             if (!passwordIsValid) {
-                return res.status(401).send({ message: 'Invalid password' });
+                return res.status(401).send({ message: 'Incorrect password' });
             }
 
             const token = jwt.sign({ id: data.dataValues.userName }, secretKey, { expiresIn: "1h" });
